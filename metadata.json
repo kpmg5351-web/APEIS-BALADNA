@@ -1,0 +1,6 @@
+{
+  "name": "أبيس بلدنا",
+  "description": "منصة رقمية لأهالي قرى أبيس تجمع الخدمات والأنشطة وسوق البيع والشراء والأسئلة المحلية",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

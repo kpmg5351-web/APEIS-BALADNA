@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تطبيق أبيس بلدنا - المنصة الخدمية والاجتماعية الشاملة</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #15803d;
+            --primary-dark: #166534;
+            --primary-light: #22c55e;
+            --accent: #f59e0b;
+            --accent-dark: #d97706;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --radius-lg: 18px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
+        }
+
+        body.dark-mode {
+            --bg-body: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: 85px;
+            overflow-x: hidden;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Offline Banner */
+        .offline-banner {
+            background: #ef4444;
+            color: white;
+            text-align: center;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 2000;
+        }
+
+        /* Fixed Sticky Header */
+        header.sticky-header {
+            position: sticky;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 10px 16px;
+            box-shadow: 0 4px 20px rgba(22, 101, 52, 0.3);
+            border-bottom: 3px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            border: 2px solid var(--accent);
+            background: #ffffff;
+            padding: 2px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .brand-title h1 {
+            font-size: 17px;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.2;
+        }
+
+        .brand-title p {
+            font-size: 11px;
+            color: #fde68a;
+            font-weight: 600;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .theme-toggle-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-avatar-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--accent);
+            background: #ffffff;
+            overflow: hidden;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-avatar-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Village Selector Filter Bar */
+        .village-filter-bar {
+            background: var(--bg-card);
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .village-filter-bar span {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
+            white-space: nowrap;
+        }
+
+        .village-select {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-body);
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 13px;
+            outline: none;
+        }
+
+        /* Navigation Bar Bottom */
+        nav.bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 998;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            padding: 6px 2px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 2px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex: 1;
+            text-align: center;
+        }
+
+        .nav-item .nav-icon {
+            font-size: 18px;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        /* App Container */
+        .app-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 14px;
+        }
+
+        /* Search Bar */
+        .search-container {
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 42px 12px 16px;
+            border-radius: var(--radius-lg);
+            border: 2px solid var(--border-color);
+            background: var(--bg-card);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-main);
+            outline: none;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: var(--text-muted);
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            background: linear-gradient(135deg, #15803d, #166534);
+            border-radius: var(--radius-lg);
+            padding: 18px;
+            color: white;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner h2 {
+            font-size: 19px;
+            font-weight: 800;
+            margin-bottom: 4px;
+            color: #fbbf24;
+        }
+
+        .hero-banner p {
+            font-size: 12px;
+            opacity: 0.95;
+            margin-bottom: 12px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .stat-badge {
+            background: rgba(255,255,255,0.18);
+            backdrop-filter: blur(4px);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* Section Header */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 16px;
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        /* Filter Chips */
+        .filter-chips {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            margin-bottom: 14px;
+            scrollbar-width: none;
+        }
+
+        .filter-chips::-webkit-scrollbar {
+            display: none;
+        }
+
+        .chip {
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .chip.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 14px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Social Post Card */
+        .post-card {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .post-author {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #f1f5f9;
+        }
+
+        .author-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .author-details h4 {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .author-details span {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .post-text {
+            font-size: 14px;
+            color: var(--text-main);
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+
+        .post-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 10px;
+            margin-top: 4px;
+        }
+
+        .btn-like, .btn-comment {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-like.liked {
+            color: #ef4444;
+        }
+
+        /* Action Buttons */
+        .card-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .btn-action {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 8px;
+            border-radius: var(--radius-md);
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-call { background: #22c55e; color: white; }
+        .btn-whatsapp { background: #25d366; color: white; }
+        .btn-map { background: #3b82f6; color: white; }
+
+        /* Status Badge */
+        .status-badge {
+            font-size: 11px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+
+        .status-open { background: #dcfce7; color: #15803d; }
+        .status-closed { background: #fee2e2; color: #b91c1c; }
+
+        /* Modal Overlays */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: var(--bg-card);
+            width: 100%;
+            max-width: 550px;
+            border-top-left-radius: 24px;
+            border-top-right-radius: 24px;
+            padding: 20px;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .btn-close {
+            background: var(--bg-body);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 16px;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            font-size: 13px;
+            font-weight: 600;
+            outline: none;
+            background: var(--bg-body);
+            color: var(--text-main);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            font-size: 15px;
+            font-weight: 800;
+            border: none;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(21, 128, 61, 0.3);
+        }
+
+        /* OTP Inputs */
+        .otp-inputs {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            margin: 16px 0;
+            direction: ltr;
+        }
+
+        .otp-box {
+            width: 42px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            border: 2px solid var(--border-color);
+            text-align: center;
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary);
+            outline: none;
+            background: var(--bg-body);
+        }
+
+        /* Avatars Grid */
+        .avatars-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .avatar-option {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            overflow: hidden;
+            background: var(--bg-body);
+            margin: 0 auto;
+        }
+
+        .avatar-option.selected {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-light);
+        }
+
+        .avatar-option img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: #0f172a;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 12px;
+            box-shadow: var(--shadow-lg);
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Tab Pages */
+        .tab-page { display: none; }
+        .tab-page.active { display: block; }
+    </style>
+</head>
+<body>
+
+    <!-- Offline Banner -->
+    <div class="offline-banner" id="offlineBanner">⚠️ تنبيه: تم انقطاع اتصال الإنترنت. أنت تعمل الآن في الوضع المحلي.</div>
+
+    <!-- Fixed Sticky Header -->
+    <header class="sticky-header">
+        <div class="header-brand">
+            <svg class="brand-logo" viewBox="0 0 200 200">
+                <defs>
+                    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#16a34a" />
+                        <stop offset="100%" stop-color="#15803d" />
+                    </linearGradient>
+                    <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#fbbf24" />
+                        <stop offset="100%" stop-color="#d97706" />
+                    </linearGradient>
+                </defs>
+                <circle cx="100" cy="100" r="90" fill="url(#g1)" stroke="#ffffff" stroke-width="6"/>
+                <circle cx="100" cy="100" r="78" fill="none" stroke="url(#g2)" stroke-width="3" stroke-dasharray="6,4"/>
+                <path d="M100 130 Q95 110 80 90 Q100 95 100 130 Z" fill="url(#g2)"/>
+                <path d="M100 130 Q105 110 120 90 Q100 95 100 130 Z" fill="url(#g2)"/>
+                <path d="M100 130 Q90 100 65 75 Q90 85 100 130 Z" fill="#22c55e"/>
+                <path d="M100 130 Q110 100 135 75 Q110 85 100 130 Z" fill="#22c55e"/>
+                <rect x="96" y="115" width="8" height="40" rx="4" fill="#854d0e"/>
+                <text x="100" y="172" font-family="Arial" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">أبيس بلدنا</text>
+            </svg>
+            <div class="brand-title">
+                <h1>أبيس بلدنا</h1>
+                <p id="headerVillageText">المنصة الخدمية والاجتماعية</p>
+            </div>
+        </div>
+
+        <div class="header-controls">
+            <button class="theme-toggle-btn" onclick="toggleDarkMode()" title="تغيير الوضع">🌙</button>
+            <div class="user-avatar-btn" onclick="switchTab('profile')" title="لوحة التحكم والبروفايل">
+                <img id="headerAvatarImg" src="https://api.dicebear.com/7.x/bottts/svg?seed=AbeesUser" alt="الحساب">
+            </div>
+        </div>
+    </header>
+
+    <!-- Village Selector Filter Bar -->
+    <div class="village-filter-bar">
+        <span>📍 فلترة القرية:</span>
+        <select class="village-select" id="globalVillageFilter" onchange="handleGlobalVillageFilter(this.value)">
+            <option value="الكل">جميع قرى أبيس (1، 2، 7، 8 والعزب)</option>
+            <option value="أبيس القرية الأولى">أبيس القرية الأولى</option>
+            <option value="أبيس القرية الثانية">أبيس القرية الثانية</option>
+            <option value="أبيس القرية السابعة">أبيس القرية السابعة</option>
+            <option value="أبيس القرية الثامنة">أبيس القرية الثامنة</option>
+            <option value="عزبة القلعة / أبيس">عزبة القلعة / أبيس</option>
+        </select>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toastMsg">
+        <span id="toastText">تم الحفظ بنجاح</span>
+    </div>
+
+    <!-- Main Container -->
+    <main class="app-container">
+
+        <!-- Search Bar -->
+        <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="globalSearch" placeholder="ابحث عن منشور، صنايعي، سائق، أو محل..." oninput="handleGlobalSearch(this.value)">
+        </div>
+
+        <!-- TAB 1: SOCIAL FEED (منشورات القرية) -->
+        <div class="tab-page active" id="page-feed">
+            <div class="hero-banner">
+                <h2>حائط أخبار منشورات أبيس 📰</h2>
+                <p>تشارك المنشورات، الأخبار، والاستفسارات اليومية مع أهالي قرى أبيس مباشرة.</p>
+                <div class="hero-stats">
+                    <div class="stat-badge">💬 منشورات تفاعلية</div>
+                    <div class="stat-badge">📢 إعلانات مجتمعية</div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-bottom:16px; display:flex; align-items:center; gap:12px; cursor:pointer;" onclick="openCreatePostModal()">
+                <div class="author-avatar" style="width:42px; height:42px;">
+                    <img id="feedAvatarPromptImg" src="https://api.dicebear.com/7.x/bottts/svg?seed=AbeesUser" alt="صورة">
+                </div>
+                <div style="color:var(--text-muted); font-size:13px; font-weight:700;">بماذا تفكر اليوم يا أهل أبيس؟ اكتب منشوراً...</div>
+            </div>
+
+            <div class="cards-grid" id="feedPostsGrid">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+
+        <!-- TAB 2: CRAFTSMEN (الصنايعية) -->
+        <div class="tab-page" id="page-craftsmen">
+            <div class="section-header">
+                <div class="section-title">دليل الصنايعية والمهنيين</div>
+                <button class="chip active" onclick="openRegisterCraftsmanModal()">+ تسجيل صنايعي</button>
+            </div>
+
+            <div class="filter-chips" id="craftsmenCategoryFilter">
+                <button class="chip active" onclick="filterCraftsmenCat('الكل', this)">الكل</button>
+                <button class="chip" onclick="filterCraftsmenCat('سباكة', this)">🔧 سباكة</button>
+                <button class="chip" onclick="filterCraftsmenCat('كهرباء', this)">⚡ كهرباء</button>
+                <button class="chip" onclick="filterCraftsmenCat('نجارة', this)">🪚 نجارة</button>
+                <button class="chip" onclick="filterCraftsmenCat('نقاشة', this)">🎨 نقاشة</button>
+                <button class="chip" onclick="filterCraftsmenCat('تكييف', this)">❄️ تكييف</button>
+                <button class="chip" onclick="filterCraftsmenCat('حدادة', this)">⚙️ حدادة</button>
+            </div>
+
+            <div class="cards-grid" id="craftsmenGrid">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+
+        <!-- TAB 3: TRANSPORT & DRIVERS (السائقين والتوصيل) -->
+        <div class="tab-page" id="page-drivers">
+            <div class="section-header">
+                <div class="section-title">دليل السائقين وطلب التوصيل 🚚</div>
+                <div style="display:flex; gap:6px;">
+                    <button class="chip active" onclick="openRideRequestModal()">🚕 طلب توصيلة</button>
+                    <button class="chip" onclick="openRegisterDriverModal()">+ تسجيل سائق</button>
+                </div>
+            </div>
+
+            <div class="cards-grid" id="driversGrid">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+
+        <!-- TAB 4: MARKETPLACE (السوق المحلي) -->
+        <div class="tab-page" id="page-market">
+            <div class="section-header">
+                <div class="section-title">سوق أبيس بلدنا (بيع وشراء) 🛒</div>
+                <button class="chip active" onclick="openAddAdModal()">+ أضف إعلان</button>
+            </div>
+
+            <div class="cards-grid" id="marketGrid">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+
+        <!-- TAB 5: PLACES & PHARMACIES (الأماكن، الصيدليات والطوارئ) -->
+        <div class="tab-page" id="page-places">
+            <div class="section-header">
+                <div class="section-title">الأماكن، الصيدليات، والطوارئ 🚨</div>
+                <button class="chip active" onclick="openAddPlaceModal()">+ إضافة مكان</button>
+            </div>
+
+            <div class="filter-chips">
+                <button class="chip active" onclick="switchPlacesCategory('all', this)">الكل</button>
+                <button class="chip" onclick="switchPlacesCategory('pharmacies', this)">💊 الصيدليات المناوبة</button>
+                <button class="chip" onclick="switchPlacesCategory('emergency', this)">🚨 أرقام الطوارئ</button>
+                <button class="chip" onclick="switchPlacesCategory('shops', this)">🏪 المحلات والخدمات</button>
+            </div>
+
+            <div class="cards-grid" id="placesGrid">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+
+        <!-- TAB 6: USER PROFILE & DASHBOARD (لوحة التحكم والبروفايل) -->
+        <div class="tab-page" id="page-profile">
+            <div class="card" style="text-align:center; padding:20px; margin-bottom:16px;">
+                <div class="user-avatar-btn" style="width:80px; height:80px; margin:0 auto 12px auto;">
+                    <img id="profilePageAvatarImg" src="https://api.dicebear.com/7.x/bottts/svg?seed=AbeesUser" alt="الصورة">
+                </div>
+                <h3 id="profilePageName" style="font-size:18px; font-weight:800;">مستخدم جديد</h3>
+                <p id="profilePagePhone" style="color:var(--text-muted); font-size:13px;">غير مسجل برقم هاتف</p>
+                <div id="verifiedStatusBadge" style="margin-top:6px; display:inline-block; padding:4px 12px; background:#fef3c7; color:#d97706; border-radius:12px; font-weight:700; font-size:11px;">
+                    ⚠️ حساب غير موثق (OTP)
+                </div>
+
+                <div style="display:flex; justify-style:space-around; margin-top:16px; border-top:1px solid var(--border-color); padding-top:12px;">
+                    <div>
+                        <div style="font-size:18px; font-weight:800; color:var(--primary);" id="myPostsCount">0</div>
+                        <div style="font-size:11px; color:var(--text-muted);">منشوراتي</div>
+                    </div>
+                    <div>
+                        <div style="font-size:18px; font-weight:800; color:var(--accent-dark);" id="myAdsCount">0</div>
+                        <div style="font-size:11px; color:var(--text-muted);">إعلاناتي بالسوق</div>
+                    </div>
+                    <div>
+                        <div style="font-size:18px; font-weight:800; color:#ef4444;" id="myLikesCount">0</div>
+                        <div style="font-size:11px; color:var(--text-muted);">إعجابات تم استلامها</div>
+                    </div>
+                </div>
+
+                <button class="btn-submit" style="margin-top:16px;" onclick="openAuthModal()">تعديل البيانات والتحقق برمز OTP 📲</button>
+            </div>
+
+            <!-- My Dashboard Tabs -->
+            <div class="filter-chips">
+                <button class="chip active" onclick="switchDashboardTab('my-posts', this)">📝 منشوراتي</button>
+                <button class="chip" onclick="switchDashboardTab('my-ads', this)">🛒 إعلاناتي</button>
+            </div>
+
+            <div class="cards-grid" id="myDashboardContent">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('feed', this)">
+            <span class="nav-icon">📰</span>
+            <span>الأخبار</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('craftsmen', this)">
+            <span class="nav-icon">👨‍🔧</span>
+            <span>الصنايعية</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('drivers', this)">
+            <span class="nav-icon">🚚</span>
+            <span>السائقين</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('market', this)">
+            <span class="nav-icon">🛒</span>
+            <span>السوق</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('places', this)">
+            <span class="nav-icon">📍</span>
+            <span>الأماكن</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('profile', this)">
+            <span class="nav-icon">👤</span>
+            <span>حسابي</span>
+        </div>
+    </nav>
+
+    <!-- MODAL 1: AUTH & OTP REGISTRATION -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title">التسجيل والتحقق برمز OTP</div>
+                <button class="btn-close" onclick="closeModal('authModal')">✕</button>
+            </div>
+
+            <div id="authStep1">
+                <div class="form-group">
+                    <label class="form-label">اختيار صورة الحساب (Avatar):</label>
+                    <div class="avatars-grid" id="avatarsList"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">الاسم بالكامل:</label>
+                    <input type="text" class="form-input" id="regName" placeholder="أدخل اسمك الكريِم">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">رقم الهاتف (للتوثيق):</label>
+                    <input type="tel" class="form-input" id="regPhone" placeholder="010xxxxxxxx" dir="ltr">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">قرية الإقامة:</label>
+                    <select class="form-select" id="regVillage">
+                        <option value="أبيس القرية الأولى">أبيس القرية الأولى</option>
+                        <option value="أبيس القرية الثانية">أبيس القرية الثانية</option>
+                        <option value="أبيس القرية السابعة">أبيس القرية السابعة</option>
+                        <option value="أبيس القرية الثامنة">أبيس القرية الثامنة</option>
+                        <option value="عزبة القلعة / أبيس">عزبة القلعة / أبيس</option>
+                    </select>
+                </div>
+                <button class="btn-submit" onclick="sendOTPCode()">إرسال رمز التحقق (OTP) 📩</button>
+            </div>
+
+            <div id="authStep2" style="display:none; text-align:center;">
+                <p style="font-size:13px; color:var(--text-muted); margin-bottom:8px;">تم إرسال الرمز المكون من 6 أرقام إلى الهاتف:</p>
+                <div style="font-weight:800; color:var(--primary); font-size:15px; margin-bottom:12px;" id="sentPhoneText">01012345678</div>
+                <div class="otp-inputs">
+                    <input type="text" class="otp-box" maxlength="1" onkeyup="moveOtp(this, 1)" id="otp1">
+                    <input type="text" class="otp-box" maxlength="1" onkeyup="moveOtp(this, 2)" id="otp2">
+                    <input type="text" class="otp-box" maxlength="1" onkeyup="moveOtp(this, 3)" id="otp3">
+                    <input type="text" class="otp-box" maxlength="1" onkeyup="moveOtp(this, 4)" id="otp4">
+                    <input type="text" class="otp-box" maxlength="1" onkeyup="moveOtp(this, 5)" id="otp5">
+                    <input type="text" class="otp-box" maxlength="1" onkeyup="moveOtp(this, 6)" id="otp6">
+                </div>
+                <p style="font-size:11px; color:var(--accent-dark); font-weight:700; margin-bottom:14px;" id="simOtpHint"></p>
+                <button class="btn-submit" onclick="verifyOTPCode()">تأكيد التوثيق وحفظ البروفايل ✅</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: CREATE POST -->
+    <div class="modal-overlay" id="createPostModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title">إضافة منشور جديد في أخبار أبيس</div>
+                <button class="btn-close" onclick="closeModal('createPostModal')">✕</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">نص المنشور:</label>
+                <textarea class="form-textarea" id="postTextContent" rows="4" placeholder="اكتب استفسارك، خبرك، أو إعلانك للقرية..."></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">التصنيف:</label>
+                <select class="form-select" id="postCategory">
+                    <option value="أخبار واستفسارات">أخبار واستفسارات</option>
+                    <option value="خدمات ومساعدة">خدمات ومساعدة</option>
+                    <option value="مفقودات ومثبتات">مفقودات ومثبتات</option>
+                    <option value="فعاليات ومناسبات">فعاليات ومناسبات</option>
+                </select>
+            </div>
+            <button class="btn-submit" onclick="submitNewPost()">نشر الآن 📢</button>
+        </div>
+    </div>
+
+    <!-- MODAL 3: REGISTER CRAFTSMAN -->
+    <div class="modal-overlay" id="regCraftsmanModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title">تسجيل صنايعي / مهني جديد</div>
+                <button class="btn-close" onclick="closeModal('regCraftsmanModal')">✕</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">الاسم التجاري / اسم الصنايعي:</label>
+                <input type="text" class="form-input" id="cmName" placeholder="مثال: الأسطى إبراهيم للسباكة">
+            </div>
+            <div class="form-group">
+                <label class="form-label">المهنة والتخصص:</label>
+                <select class="form-select" id="cmSpecialty">
+                    <option value="سباكة">سباكة</option>
+                    <option value="كهرباء">كهرباء</option>
+                    <option value="نجارة">نجارة</option>
+                    <option value="نقاشة">نقاشة</option>
+                    <option value="تكييف">تكييف وصيانة أجهزة</option>
+                    <option value="حدادة">حدادة وألوميتال</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">رقم للتواصل (مكالمات / واتساب):</label>
+                <input type="tel" class="form-input" id="cmPhone" placeholder="010xxxxxxxx">
+            </div>
+            <div class="form-group">
+                <label class="form-label">القرية:</label>
+                <select class="form-select" id="cmVillage">
+                    <option value="أبيس القرية الأولى">أبيس القرية الأولى</option>
+                    <option value="أبيس القرية الثانية">أبيس القرية الثانية</option>
+                    <option value="أبيس القرية السابعة">أبيس القرية السابعة</option>
+                    <option value="أبيس القرية الثامنة">أبيس القرية الثامنة</option>
+                    <option value="عزبة القلعة / أبيس">عزبة القلعة / أبيس</option>
+                </select>
+            </div>
+            <button class="btn-submit" onclick="submitRegisterCraftsman()">تسجيل وانضمام للدليل 🔧</button>
+        </div>
+    </div>
+
+    <!-- MODAL 4: REQUEST RIDE -->
+    <div class="modal-overlay" id="rideRequestModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title">طلب توصيلة طوارئ / مشوار</div>
+                <button class="btn-close" onclick="closeModal('rideRequestModal')">✕</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">مكان الانطلاق (منين):</label>
+                <input type="text" class="form-input" id="rideFrom" placeholder="مثال: مدخل القرية الأولى">
+            </div>
+            <div class="form-group">
+                <label class="form-label">الوجهة (على فين):</label>
+                <input type="text" class="form-input" id="rideTo" placeholder="مثال: محطة مصر / صيدلية العزبي">
+            </div>
+            <div class="form-group">
+                <label class="form-label">نوع المركبة المطلوب:</label>
+                <select class="form-select" id="rideVehicleType">
+                    <option value="توك توك">توك توك 🛺</option>
+                    <option value="سيارة ملاكي">سيارة ملاكي 🚗</option>
+                    <option value="سيارة نقل / جامبو">سيارة نقل / جامبو 🚚</option>
+                </select>
+            </div>
+            <button class="btn-submit" onclick="submitRideRequest()">إرسال طلب التوصيل 🚕</button>
+        </div>
+    </div>
+
+    <!-- MODAL 5: REGISTER DRIVER -->
+    <div class="modal-overlay" id="regDriverModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title">تسجيل سائق جديد</div>
+                <button class="btn-close" onclick="closeModal('regDriverModal')">✕</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">اسم السائق:</label>
+                <input type="text" class="form-input" id="driverName" placeholder="مثال: كابتن أحمد">
+            </div>
+            <div class="form-group">
+                <label class="form-label">نوع المركبة وموديلها:</label>
+                <input type="text" class="form-input" id="driverVehicle" placeholder="مثال: توك توك 2023 / شيفروليه دبابة">
+            </div>
+            <div class="form-group">
+                <label class="form-label">رقم الهاتف:</label>
+                <input type="tel" class="form-input" id="driverPhone" placeholder="010xxxxxxxx">
+            </div>
+            <div class="form-group">
+                <label class="form-label">القرية:</label>
+                <select class="form-select" id="driverVillage">
+                    <option value="أبيس القرية الأولى">أبيس القرية الأولى</option>
+                    <option value="أبيس القرية الثانية">أبيس القرية الثانية</option>
+                    <option value="أبيس القرية السابعة">أبيس القرية السابعة</option>
+                    <option value="أبيس القرية الثامنة">أبيس القرية الثامنة</option>
+                    <option value="عزبة القلعة / أبيس">عزبة القلعة / أبيس</option>
+                </select>
+            </div>
+            <button class="btn-submit" onclick="submitRegisterDriver()">تسجيل الكابتن 🛺</button>
+        </div>
+    </div>
+
+    <!-- MODAL 6: ADD MARKET AD -->
+    <div class="modal-overlay" id="addAdModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title">إضافة إعلان بيع في السوق</div>
+                <button class="btn-close" onclick="closeModal('addAdModal')">✕</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">عنوان السلعة أو الإعلان:</label>
+                <input type="text" class="form-input" id="adTitle" placeholder="مثال: جرار زراعي / شقة للإيجار">
+            </div>
+            <div class="form-group">
+                <label class="form-label">السعر (بالجنيه):</label>
+                <input type="text" class="form-input" id="adPrice" placeholder="مثال: 15,000 ج.م">
+            </div>
+            <div class="form-group">
+                <label class="form-label">وصف السلعة والتفاصيل:</label>
+                <textarea class="form-textarea" id="adDesc" rows="3" placeholder="صف حالتها بدقة..."></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">رقم للتواصل:</label>
+                <input type="tel" class="form-input" id="adPhone" placeholder="010xxxxxxxx">
+            </div>
+            <button class="btn-submit" onclick="submitNewMarketAd()">نشر الإعلان 📢</button>
+        </div>
+    </div>
+
+    <!-- MODAL 7: ADD PLACE -->
+    <div class="modal-overlay" id="addPlaceModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title">إضافة مكان / محل جديد</div>
+                <button class="btn-close" onclick="closeModal('addPlaceModal')">✕</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">اسم المكان أو المحل:</label>
+                <input type="text" class="form-input" id="placeName" placeholder="مثال: سوبرماركت البركة">
+            </div>
+            <div class="form-group">
+                <label class="form-label">التصنيف:</label>
+                <select class="form-select" id="placeCategory">
+                    <option value="صيدليات وطوارئ">صيدليات وطوارئ</option>
+                    <option value="محلات وماركت">محلات وماركت</option>
+                    <option value="عيادات ومستشفيات">عيادات ومستشفيات</option>
+                    <option value="مواقف وتوصيلات">مواقف وتوصيلات</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">العنوان والتفاصيل:</label>
+                <input type="text" class="form-input" id="placeAddress" placeholder="مثال: شارع المسجد الكبير - القرية الأولى">
+            </div>
+            <button class="btn-submit" onclick="submitNewPlace()">إضافة المكان 📍</button>
+        </div>
+    </div>
+
+    <!-- JavaScript Data & Logic -->
+    <script>
+        // State
+        let selectedGlobalVillage = 'الكل';
+        let globalSearchTerm = '';
+        let placesFilterCat = 'all';
+        let activeDashboardTab = 'my-posts';
+
+        let currentUser = JSON.parse(localStorage.getItem('abees_user_profile')) || {
+            name: 'مستخدم جديد',
+            phone: '',
+            village: 'أبيس القرية الأولى',
+            avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Abees1',
+            verified: false
+        };
+
+        let generatedOtp = '';
+
+        // Initial Sample Data
+        let postsData = [
+            { id: 1, author: 'المهندس أحمد علي', village: 'أبيس القرية الأولى', avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Abees1', category: 'أخبار واستفسارات', time: 'منذ ساعة', text: 'السلام عليكم يا أهالي أبيس الكرام، هل حد يعرف مواعيد عمل الوحدة الصحية بالقرية الأولى غداً؟', likes: 12, comments: ['مفتوحة من 8 صباحاً', 'تمام بتشتغل يومياً'] },
+            { id: 2, author: 'الأسطى إبراهيم النجار', village: 'أبيس القرية الثانية', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=AbeesMaster', category: 'خدمات ومساعدة', time: 'منذ 3 ساعات', text: 'تم بفضل الله افتتاح ورشة النجارة والأثاث الجديدة بجوار المجمع الاستهلاكي. خصم 15% لكل أهالي أبيس.', likes: 28, comments: ['ألف مبروك يا أسطى وبالتوفيق'] }
+        ];
+
+        let craftsmenData = [
+            { id: 1, name: 'السطوحي للسباكة الحديثة', specialty: 'سباكة', village: 'أبيس القرية الأولى', phone: '01012345678', rating: 4.9, count: 18, lat: 31.1852, lng: 30.0125 },
+            { id: 2, name: 'المهندس أحمد كهربائي منازل', specialty: 'كهرباء', village: 'أبيس القرية الثانية', phone: '01123456789', rating: 4.8, count: 24, lat: 31.1890, lng: 30.0180 },
+            { id: 3, name: 'معلم محمود نقاش وجبس بورد', specialty: 'نقاشة', village: 'عزبة القلعة / أبيس', phone: '01545678901', rating: 5.0, count: 31, lat: 31.1910, lng: 30.0140 }
+        ];
+
+        let driversData = [
+            { id: 1, name: 'كابتن إسلام توك توك', vehicle: 'توك توك موديل 2023', village: 'أبيس القرية الأولى', phone: '01011223344', is24h: true, rating: 4.9 },
+            { id: 2, name: 'كابتن محمود نقل وجامبو', vehicle: 'شيفروليه جامبو نقل أثاث', village: 'أبيس القرية الثانية', phone: '01122334455', is24h: false, rating: 4.8 }
+        ];
+
+        let marketData = [
+            { id: 101, title: 'ماكينة ري زراعية 7 حصان', price: '12,500 ج.م', desc: 'استعمال خفيف بحالة الفابريكة، صيانة دورية.', phone: '01012345678', village: 'أبيس القرية الأولى' },
+            { id: 102, title: 'شقة للإيجار 3 غرف وصالة', price: '1,800 ج.م/شهر', desc: 'دور ثاني تشطيب سوبر لوكس، غاز طبيعي.', phone: '01123456789', village: 'أبيس القرية الثانية' }
+        ];
+
+        let placesData = [
+            { id: 1, name: 'صيدلية د. محمد العزبي', category: 'pharmacies', address: 'الشارع الرئيسي - أبيس الثانية', isOpen: true, lat: 31.1895, lng: 30.0185, phone: '01099887766' },
+            { id: 2, name: 'سوبرماركت البركة والخير', category: 'shops', address: 'شارع المسجد الكبير - القرية الأولى', isOpen: true, lat: 31.1915, lng: 30.0145, phone: '01233445566' },
+            { id: 3, name: 'إسعاف أبيس والإسكندرية', category: 'emergency', address: 'خدمة طوارئ 24 ساعة', isOpen: true, lat: 31.1850, lng: 30.0120, phone: '123' },
+            { id: 4, name: 'نجدة الشرطة', category: 'emergency', address: 'خدمة نجدة فورية', isOpen: true, lat: 31.1850, lng: 30.0120, phone: '122' }
+        ];
+
+        const avatarListOptions = [
+            'https://api.dicebear.com/7.x/bottts/svg?seed=Abees1',
+            'https://api.dicebear.com/7.x/bottts/svg?seed=Abees2',
+            'https://api.dicebear.com/7.x/bottts/svg?seed=Abees3',
+            'https://api.dicebear.com/7.x/avataaars/svg?seed=AbeesFarmer',
+            'https://api.dicebear.com/7.x/avataaars/svg?seed=AbeesTech',
+            'https://api.dicebear.com/7.x/avataaars/svg?seed=AbeesMaster',
+            'https://api.dicebear.com/7.x/avataaars/svg?seed=AbeesLeader',
+            'https://api.dicebear.com/7.x/bottts/svg?seed=AbeesHero'
+        ];
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUserProfileUI();
+            renderFeedPosts();
+            renderCraftsmenGrid();
+            renderDriversGrid();
+            renderMarketGrid();
+            renderPlacesGrid();
+            renderAvatarsList();
+
+            // Online/Offline listener
+            window.addEventListener('online', () => document.getElementById('offlineBanner').style.display = 'none');
+            window.addEventListener('offline', () => document.getElementById('offlineBanner').style.display = 'block');
+        });
+
+        // Theme Toggle
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        // Navigation
+        function switchTab(tabName, el) {
+            document.querySelectorAll('.tab-page').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            
+            document.getElementById(`page-${tabName}`).classList.add('active');
+            if (el) el.classList.add('active');
+            if (tabName === 'profile') renderUserDashboard();
+        }
+
+        // Global Filters
+        function handleGlobalVillageFilter(val) {
+            selectedGlobalVillage = val;
+            renderFeedPosts();
+            renderCraftsmenGrid();
+            renderDriversGrid();
+            renderMarketGrid();
+            renderPlacesGrid();
+        }
+
+        function handleGlobalSearch(val) {
+            globalSearchTerm = val.toLowerCase();
+            renderFeedPosts();
+            renderCraftsmenGrid();
+            renderDriversGrid();
+            renderMarketGrid();
+            renderPlacesGrid();
+        }
+
+        // Render Feed Posts
+        function renderFeedPosts() {
+            const container = document.getElementById('feedPostsGrid');
+            container.innerHTML = '';
+
+            let filtered = postsData.filter(p => {
+                const matchVillage = (selectedGlobalVillage === 'الكل' || p.village === selectedGlobalVillage);
+                const matchSearch = globalSearchTerm === '' || p.text.toLowerCase().includes(globalSearchTerm) || p.author.toLowerCase().includes(globalSearchTerm);
+                return matchVillage && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-muted); font-weight:700;">لا توجد منشورات مطابقة حتى الآن...</div>';
+                return;
+            }
+
+            filtered.forEach(p => {
+                container.innerHTML += `
+                    <div class="card post-card">
+                        <div class="post-author">
+                            <div class="author-info">
+                                <div class="author-avatar"><img src="${p.avatar}" alt="avatar"></div>
+                                <div class="author-details">
+                                    <h4>${p.author}</h4>
+                                    <span>📍 ${p.village} • ${p.time}</span>
+                                </div>
+                            </div>
+                            <span class="chip" style="font-size:10px;">${p.category}</span>
+                        </div>
+                        <div class="post-text">${p.text}</div>
+                        <div class="post-actions">
+                            <button class="btn-like" onclick="toggleLikePost(${p.id}, this)">
+                                ❤️ <span>${p.likes}</span> إعجاب
+                            </button>
+                            <button class="btn-comment" onclick="showToast('💬 التعليقات متوفرة لهذا المنشور')">
+                                💬 <span>${p.comments.length}</span> تعليق
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function toggleLikePost(id, btn) {
+            let p = postsData.find(x => x.id === id);
+            if (p) {
+                p.likes++;
+                btn.classList.add('liked');
+                btn.querySelector('span').innerText = p.likes;
+                showToast('❤️ تم تسجيل إعجابك بالمنشور');
+            }
+        }
+
+        // Render Craftsmen Grid
+        let selectedCraftsmenCat = 'الكل';
+        function renderCraftsmenGrid() {
+            const container = document.getElementById('craftsmenGrid');
+            container.innerHTML = '';
+
+            let filtered = craftsmenData.filter(c => {
+                const matchCat = selectedCraftsmenCat === 'الكل' || c.specialty.includes(selectedCraftsmenCat);
+                const matchVillage = selectedGlobalVillage === 'الكل' || c.village === selectedGlobalVillage;
+                const matchSearch = globalSearchTerm === '' || c.name.toLowerCase().includes(globalSearchTerm) || c.specialty.toLowerCase().includes(globalSearchTerm);
+                return matchCat && matchVillage && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-muted); font-weight:700;">لا يوجد صنايعي مطبق...</div>';
+                return;
+            }
+
+            filtered.forEach(c => {
+                const mapUrl = `https://www.google.com/maps/search/?api=1&query=${c.lat},${c.lng}`;
+                container.innerHTML += `
+                    <div class="card">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                            <div style="display:flex; gap:10px;">
+                                <div style="width:48px; height:48px; border-radius:50%; background:#f0fdf4; display:flex; align-items:center; justify-content:center; font-size:22px;">👨‍🔧</div>
+                                <div>
+                                    <h3 style="font-size:15px; font-weight:800;">${c.name}</h3>
+                                    <span style="font-size:11px; background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:6px; font-weight:700;">${c.specialty}</span>
+                                    <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">📍 ${c.village}</div>
+                                </div>
+                            </div>
+                            <span style="background:#fffbeb; color:#d97706; padding:2px 8px; border-radius:10px; font-size:12px; font-weight:800;">★ ${c.rating} (${c.count})</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="tel:${c.phone}" class="btn-action btn-call">📞 اتصال</a>
+                            <a href="https://wa.me/2${c.phone}" target="_blank" class="btn-action btn-whatsapp">💬 واتساب</a>
+                            <a href="${mapUrl}" target="_blank" class="btn-action btn-map">📍 الخريطة</a>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function filterCraftsmenCat(cat, el) {
+            selectedCraftsmenCat = cat;
+            document.querySelectorAll('#craftsmenCategoryFilter .chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            renderCraftsmenGrid();
+        }
+
+        // Render Drivers Grid
+        function renderDriversGrid() {
+            const container = document.getElementById('driversGrid');
+            container.innerHTML = '';
+
+            let filtered = driversData.filter(d => {
+                const matchVillage = selectedGlobalVillage === 'الكل' || d.village === selectedGlobalVillage;
+                const matchSearch = globalSearchTerm === '' || d.name.toLowerCase().includes(globalSearchTerm) || d.vehicle.toLowerCase().includes(globalSearchTerm);
+                return matchVillage && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-muted); font-weight:700;">لا يوجد سائق مطبق...</div>';
+                return;
+            }
+
+            filtered.forEach(d => {
+                container.innerHTML += `
+                    <div class="card">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                            <div style="display:flex; gap:10px;">
+                                <div style="width:48px; height:48px; border-radius:50%; background:#eff6ff; display:flex; align-items:center; justify-content:center; font-size:22px;">🛺</div>
+                                <div>
+                                    <h3 style="font-size:15px; font-weight:800;">${d.name}</h3>
+                                    <div style="font-size:12px; color:var(--primary); font-weight:700;">${d.vehicle}</div>
+                                    <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">📍 ${d.village}</div>
+                                </div>
+                            </div>
+                            ${d.is24h ? '<span class="status-badge status-open">24 ساعة 🟢</span>' : ''}
+                        </div>
+                        <div class="card-actions" style="grid-template-columns:1fr 1fr; margin-top:10px;">
+                            <a href="tel:${d.phone}" class="btn-action btn-call">📞 اتصال مباشر</a>
+                            <a href="https://wa.me/2${d.phone}" target="_blank" class="btn-action btn-whatsapp">💬 واتساب</a>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Render Market Grid
+        function renderMarketGrid() {
+            const container = document.getElementById('marketGrid');
+            container.innerHTML = '';
+
+            let filtered = marketData.filter(m => {
+                const matchVillage = selectedGlobalVillage === 'الكل' || m.village === selectedGlobalVillage;
+                const matchSearch = globalSearchTerm === '' || m.title.toLowerCase().includes(globalSearchTerm) || m.desc.toLowerCase().includes(globalSearchTerm);
+                return matchVillage && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-muted); font-weight:700;">السوق فارغ حالياً لمطابقة الفلتر...</div>';
+                return;
+            }
+
+            filtered.forEach(m => {
+                container.innerHTML += `
+                    <div class="card">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                            <h3 style="font-size:15px; font-weight:800;">${m.title}</h3>
+                            <span style="background:#dcfce7; color:#15803d; font-weight:800; font-size:13px; padding:2px 8px; border-radius:8px;">${m.price}</span>
+                        </div>
+                        <p style="font-size:12px; color:var(--text-muted); margin:6px 0;">${m.desc}</p>
+                        <div style="font-size:11px; color:var(--text-main); font-weight:700; margin-bottom:8px;">📍 الموقع: ${m.village}</div>
+                        <a href="tel:${m.phone}" class="btn-action btn-call" style="width:100%; text-decoration:none;">📞 تواصل مع البائع (${m.phone})</a>
+                    </div>
+                `;
+            });
+        }
+
+        // Render Places Grid
+        function renderPlacesGrid() {
+            const container = document.getElementById('placesGrid');
+            container.innerHTML = '';
+
+            let filtered = placesData.filter(p => {
+                const matchCat = placesFilterCat === 'all' || p.category === placesFilterCat;
+                const matchSearch = globalSearchTerm === '' || p.name.toLowerCase().includes(globalSearchTerm) || p.address.toLowerCase().includes(globalSearchTerm);
+                return matchCat && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-muted); font-weight:700;">لا توجد أرقام أو أماكن مطابقة...</div>';
+                return;
+            }
+
+            filtered.forEach(p => {
+                const mapUrl = `https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`;
+                container.innerHTML += `
+                    <div class="card">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                            <h3 style="font-size:15px; font-weight:800;">${p.name}</h3>
+                            <span class="status-badge ${p.isOpen ? 'status-open' : 'status-closed'}">${p.isOpen ? 'مفتوح 🟢' : 'مغلق 🔴'}</span>
+                        </div>
+                        <div style="font-size:12px; color:var(--text-muted); margin:4px 0;">📍 ${p.address}</div>
+                        <div class="card-actions" style="grid-template-columns:1fr 1fr; margin-top:10px;">
+                            <a href="tel:${p.phone}" class="btn-action btn-call">📞 اتصال (${p.phone})</a>
+                            <a href="${mapUrl}" target="_blank" class="btn-action btn-map">📍 الخريطة</a>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function switchPlacesCategory(cat, el) {
+            placesFilterCat = cat;
+            document.querySelectorAll('#page-places .filter-chips .chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            renderPlacesGrid();
+        }
+
+        // Profile & Dashboard
+        function updateUserProfileUI() {
+            document.getElementById('headerAvatarImg').src = currentUser.avatar;
+            document.getElementById('feedAvatarPromptImg').src = currentUser.avatar;
+            document.getElementById('profilePageAvatarImg').src = currentUser.avatar;
+            document.getElementById('profilePageName').innerText = currentUser.name || 'مستخدم جديد';
+            document.getElementById('profilePagePhone').innerText = currentUser.phone ? `📱 ${currentUser.phone}` : 'غير مسجل برقم هاتف';
+            document.getElementById('headerVillageText').innerText = currentUser.village || 'المنصة الخدمية والاجتماعية';
+
+            const badge = document.getElementById('verifiedStatusBadge');
+            if (currentUser.verified) {
+                badge.innerText = '✅ حساب موثق بالهاتف (OTP Verified)';
+                badge.style.background = '#dcfce7'; badge.style.color = '#15803d';
+            } else {
+                badge.innerText = '⚠️ حساب غير موثق (يرجى إدخال OTP)';
+                badge.style.background = '#fef3c7'; badge.style.color = '#d97706';
+            }
+
+            document.getElementById('regName').value = currentUser.name || '';
+            document.getElementById('regPhone').value = currentUser.phone || '';
+            document.getElementById('regVillage').value = currentUser.village || 'أبيس القرية الأولى';
+        }
+
+        function renderUserDashboard() {
+            const container = document.getElementById('myDashboardContent');
+            container.innerHTML = '';
+
+            const myPosts = postsData.filter(p => p.author === currentUser.name);
+            const myAds = marketData.filter(m => m.phone === currentUser.phone);
+
+            document.getElementById('myPostsCount').innerText = myPosts.length;
+            document.getElementById('myAdsCount').innerText = myAds.length;
+            let likesSum = 0;
+            myPosts.forEach(p => likesSum += p.likes);
+            document.getElementById('myLikesCount').innerText = likesSum;
+
+            if (activeDashboardTab === 'my-posts') {
+                if (myPosts.length === 0) {
+                    container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted); font-size:13px;">لم تقم بكتابة أي منشورات حتى الآن.</div>';
+                    return;
+                }
+                myPosts.forEach(p => {
+                    container.innerHTML += `
+                        <div class="card">
+                            <div style="font-size:13px; font-weight:700;">${p.text}</div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-top:6px; display:flex; justify-content:space-between;">
+                                <span>❤️ ${p.likes} إعجاب</span>
+                                <button style="background:none; border:none; color:#ef4444; font-weight:800; cursor:pointer;" onclick="deleteMyPost(${p.id})">حذف المنشور 🗑️</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                if (myAds.length === 0) {
+                    container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted); font-size:13px;">لم تقم بإضافة أي إعلانات بالسوق.</div>';
+                    return;
+                }
+                myAds.forEach(m => {
+                    container.innerHTML += `
+                        <div class="card">
+                            <div style="font-size:14px; font-weight:800;">${m.title}</div>
+                            <div style="font-size:12px; color:var(--primary); font-weight:700;">${m.price}</div>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        function switchDashboardTab(tab, el) {
+            activeDashboardTab = tab;
+            document.querySelectorAll('#page-profile .filter-chips .chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            renderUserDashboard();
+        }
+
+        function deleteMyPost(id) {
+            postsData = postsData.filter(p => p.id !== id);
+            renderFeedPosts();
+            renderUserDashboard();
+            showToast('🗑️ تم حذف المنشور بنجاح');
+        }
+
+        // Modals Logic
+        function openAuthModal() { document.getElementById('authModal').classList.add('active'); }
+        function openCreatePostModal() { document.getElementById('createPostModal').classList.add('active'); }
+        function openRegisterCraftsmanModal() { document.getElementById('regCraftsmanModal').classList.add('active'); }
+        function openRideRequestModal() { document.getElementById('rideRequestModal').classList.add('active'); }
+        function openRegisterDriverModal() { document.getElementById('regDriverModal').classList.add('active'); }
+        function openAddAdModal() { document.getElementById('addAdModal').classList.add('active'); }
+        function openAddPlaceModal() { document.getElementById('addPlaceModal').classList.add('active'); }
+
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function renderAvatarsList() {
+            const container = document.getElementById('avatarsList');
+            container.innerHTML = '';
+            avatarListOptions.forEach(url => {
+                const sel = currentUser.avatar === url ? 'selected' : '';
+                container.innerHTML += `<div class="avatar-option ${sel}" onclick="selectAvatarOption('${url}', this)"><img src="${url}" alt="avatar"></div>`;
+            });
+        }
+
+        function selectAvatarOption(url, el) {
+            document.querySelectorAll('.avatar-option').forEach(a => a.classList.remove('selected'));
+            el.classList.add('selected');
+            currentUser.avatar = url;
+        }
+
+        function sendOTPCode() {
+            const name = document.getElementById('regName').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            if (!name || !phone) { showToast('❌ يرجى كتابة الاسم ورقم الهاتف'); return; }
+
+            currentUser.name = name;
+            currentUser.phone = phone;
+            currentUser.village = document.getElementById('regVillage').value;
+
+            generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+            document.getElementById('sentPhoneText').innerText = phone;
+            document.getElementById('simOtpHint').innerText = `💡 رمز OTP للاختبار التجريبي هو: (${generatedOtp})`;
+            document.getElementById('authStep1').style.display = 'none';
+            document.getElementById('authStep2').style.display = 'block';
+            showToast(`💬 رمز OTP التجريبي: ${generatedOtp}`);
+        }
+
+        function moveOtp(input, idx) {
+            if (input.value.length === 1 && idx < 6) document.getElementById(`otp${idx+1}`).focus();
+        }
+
+        function verifyOTPCode() {
+            let entered = '';
+            for (let i = 1; i <= 6; i++) entered += document.getElementById(`otp${i}`).value;
+            if (entered === generatedOtp) {
+                currentUser.verified = true;
+                localStorage.setItem('abees_user_profile', JSON.stringify(currentUser));
+                updateUserProfileUI();
+                closeModal('authModal');
+                showToast('🎉 تم التوثيق برمز OTP وحفظ البروفايل بنجاح!');
+            } else {
+                showToast('❌ رمز OTP غير صحيح!');
+            }
+        }
+
+        function submitNewPost() {
+            const text = document.getElementById('postTextContent').value.trim();
+            const category = document.getElementById('postCategory').value;
+            if (!text) { showToast('❌ يرجى كتابة نص المنشور'); return; }
+
+            postsData.unshift({
+                id: Date.now(),
+                author: currentUser.name || 'مستخدم أبيس',
+                village: currentUser.village || 'أبيس القرية الأولى',
+                avatar: currentUser.avatar,
+                category: category,
+                time: 'الآن',
+                text: text,
+                likes: 0,
+                comments: []
+            });
+
+            renderFeedPosts();
+            closeModal('createPostModal');
+            document.getElementById('postTextContent').value = '';
+            showToast('📢 تم نشر المنشور بنجاح على حائط القرى!');
+        }
+
+        function submitRegisterCraftsman() {
+            const name = document.getElementById('cmName').value.trim();
+            const specialty = document.getElementById('cmSpecialty').value;
+            const phone = document.getElementById('cmPhone').value.trim();
+            const village = document.getElementById('cmVillage').value;
+            if (!name || !phone) { showToast('❌ يرجى كتابة البيانات بالكامل'); return; }
+
+            craftsmenData.unshift({ id: Date.now(), name, specialty, village, phone, rating: 5.0, count: 1, lat: 31.1852, lng: 30.0125 });
+            renderCraftsmenGrid();
+            closeModal('regCraftsmanModal');
+            showToast('🔧 تم تسجيلك بنجاح في دليل الصنايعية!');
+        }
+
+        function submitRideRequest() {
+            const from = document.getElementById('rideFrom').value.trim();
+            const to = document.getElementById('rideTo').value.trim();
+            if (!from || !to) { showToast('❌ يرجى كتابة مكان الانطلاق والوجهة'); return; }
+
+            closeModal('rideRequestModal');
+            showToast('🚕 تم إرسال طلب التوصيل للسائقين المتاحين!');
+        }
+
+        function submitRegisterDriver() {
+            const name = document.getElementById('driverName').value.trim();
+            const vehicle = document.getElementById('driverVehicle').value.trim();
+            const phone = document.getElementById('driverPhone').value.trim();
+            const village = document.getElementById('driverVillage').value;
+            if (!name || !phone) { showToast('❌ يرجى إدخال البيانات'); return; }
+
+            driversData.unshift({ id: Date.now(), name, vehicle, village, phone, is24h: true, rating: 5.0 });
+            renderDriversGrid();
+            closeModal('regDriverModal');
+            showToast('🛺 تم انضمامك بنجاح ككابتن وسائق المنيطقة!');
+        }
+
+        function submitNewMarketAd() {
+            const title = document.getElementById('adTitle').value.trim();
+            const price = document.getElementById('adPrice').value.trim();
+            const desc = document.getElementById('adDesc').value.trim();
+            const phone = document.getElementById('adPhone').value.trim();
+            if (!title || !phone) { showToast('❌ يرجى ملء الحقول المطلوبة'); return; }
+
+            marketData.unshift({ id: Date.now(), title, price, desc, phone, village: currentUser.village || 'أبيس القرية الأولى' });
+            renderMarketGrid();
+            closeModal('addAdModal');
+            showToast('📢 تم نشر الإعلان بالسوق بنجاح!');
+        }
+
+        function submitNewPlace() {
+            const name = document.getElementById('placeName').value.trim();
+            const category = document.getElementById('placeCategory').value;
+            const address = document.getElementById('placeAddress').value.trim();
+            if (!name) { showToast('❌ يرجى كتابة اسم المكان'); return; }
+
+            placesData.unshift({ id: Date.now(), name, category: 'shops', address, isOpen: true, lat: 31.1850, lng: 30.0120, phone: '01000000000' });
+            renderPlacesGrid();
+            closeModal('addPlaceModal');
+            showToast('📍 تم إضافة المكان بنجاح للدليل!');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toastMsg');
+            document.getElementById('toastText').innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>
